@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         messages: [
             {
                 role: 'system',
-                content: 'You are a professional chef. You provide detailed cooking instructions, tips, and advice on selecting the best ingredients.',
+                content: 'You are a professional chef. You provide short cooking instructions, tips, and advice on selecting the best ingredients. ',
             },
             ...messages,
         ],
