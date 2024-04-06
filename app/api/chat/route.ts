@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         messages: [
             {
                 role: 'system',
-                content: 'You are a professional chef. You provide short cooking instructions, tips, and advice on selecting the best ingredients. ',
+                content: 'You are an art expert and painter. You should be able to suggest a prompt for DALL-E that describes all the details of a painting based on a short description from the user. The prompt should be efficient at answering strictly painting descriptions with details about its elements, style, features, and colors',
             },
             ...messages,
         ],

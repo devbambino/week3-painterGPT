@@ -8,6 +8,9 @@ export default function Chat() {
     messages,
     isLoading,
     append,
+    input,
+    handleInputChange,
+    handleSubmit,
   } = useChat();
 
   const [imageIsLoading, setImageIsLoading] = useState(false);
@@ -45,41 +48,9 @@ export default function Chat() {
           value={messages[messages.length - 1].content}
           readOnly
         />
-        <div className="flex flex-col justify-center mb-2 items-center">
-          {audio && (
-            <>
-              <p> Listen to the recipe: </p>
-              <audio controls src={audio} className="w-full"></audio>
-            </>
-          )}
-          {audioIsLoading && !audio && <p> Audio is being generated... </p>}
-          {!audioIsLoading && !audio && (
-            <button
-              className="bg-blue-500 p-2 text-white rounded shadow-xl"
-              onClick={async () => {
-                setAudioIsLoading(true);
-                const response = await fetch("/api/audio", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    message: messages[messages.length - 1].content,
-                  }),
-                });
-                const audioBlob = await response.blob();
-                const audioUrl = URL.createObjectURL(audioBlob);
-                setAudio(audioUrl);
-                setAudioIsLoading(false);
-              }}
-            >
-              Generate Audio
-            </button>
-          )}
-        </div>
       </div>
     );
-   }
+  }
 
   return (
     <div className="flex flex-col w-full h-screen max-w-md py-24 mx-auto stretch">
@@ -106,7 +77,7 @@ export default function Chat() {
       <div className="fixed bottom-0 w-full max-w-md">
         <div className="flex flex-col justify-center mb-2 items-center">
           {messages.length == 0 && (
-            <button
+            /*<button
               className="bg-blue-500 p-2 text-white rounded shadow-xl"
               disabled={isLoading}
               onClick={() =>
@@ -114,7 +85,16 @@ export default function Chat() {
               }
             >
               Random Recipe
-            </button>
+            </button>*/
+            <form onSubmit={handleSubmit} className="flex justify-center">
+            <input
+              className="w-[95%] p-2 mb-8 border border-gray-300 rounded shadow-xl text-black"
+              disabled={isLoading}
+              value={input}
+              placeholder="Say something..."
+              onChange={handleInputChange}
+            />
+          </form>
           )}
           {messages.length == 2 && !isLoading && (
             <button
