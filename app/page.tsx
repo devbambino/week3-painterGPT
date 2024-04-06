@@ -53,49 +53,32 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex flex-col w-full h-screen max-w-md py-24 mx-auto stretch">
-      <div className="overflow-auto mb-8 w-full" ref={messagesContainerRef}>
-        {messages.map((m) => (
-          <div
-            key={m.id}
-            className={`whitespace-pre-wrap ${m.role === "user"
-              ? "bg-green-700 p-3 m-2 rounded-lg"
-              : "bg-slate-700 p-3 m-2 rounded-lg"
-              }`}
-          >
-            {m.role === "user" ? "User: " : "AI: "}
-            {m.content}
-          </div>
-        ))}
+    <div className="flex flex-col w-full h-screen max-w-md mx-auto stretch">
+      
+      <div className="w-full max-w-md">
+        <div className="w-full flex flex-col justify-center mb-2 items-center">
+          
+          
 
-        {isLoading && (
-          <div className="flex justify-end pr-4">
-            <span className="animate-bounce">...</span>
-          </div>
-        )}
-      </div>
-      <div className="fixed bottom-0 w-full max-w-md">
-        <div className="flex flex-col justify-center mb-2 items-center">
-          {messages.length == 0 && (
-            /*<button
-              className="bg-blue-500 p-2 text-white rounded shadow-xl"
-              disabled={isLoading}
-              onClick={() =>
-                append({ role: "user", content: "Give me a random recipe" })
-              }
-            >
-              Random Recipe
-            </button>*/
-            <form onSubmit={handleSubmit} className="flex justify-center">
-            <input
-              className="w-[95%] p-2 mb-8 border border-gray-300 rounded shadow-xl text-black"
-              disabled={isLoading}
-              value={input}
-              placeholder="Say something..."
-              onChange={handleInputChange}
-            />
-          </form>
-          )}
+            <form onSubmit={handleSubmit} className="mt-8 w-full flex flex-col">
+              <div className="space-y-2 mb-4">
+                <h2 className="text-3xl font-bold justify-center">painterGPT App</h2>
+                <p className="mb-8 text-zinc-500 dark:text-zinc-400">
+                  Give me some words and I will get you a painting!!
+                </p>
+              </div>
+              {messages.length == 0 && (
+              <input
+                className="w-full p-2 border border-gray-300 rounded shadow-xl text-black"
+                disabled={isLoading}
+                value={input}
+                placeholder="Give me some words..."
+                onChange={handleInputChange}
+
+              />)}
+            </form>
+            
+          
           {messages.length == 2 && !isLoading && (
             <button
               className="bg-blue-500 p-2 text-white rounded shadow-xl"
@@ -120,6 +103,26 @@ export default function Chat() {
             </button>
           )}
         </div>
+      </div>
+      <div className="overflow-auto mb-8 w-full" ref={messagesContainerRef}>
+        {messages.map((m) => (
+          <div
+            key={m.id}
+            className={`whitespace-pre-wrap ${m.role === "user"
+              ? "bg-green-700 p-3 m-2 rounded-lg"
+              : "bg-slate-700 p-3 m-2 rounded-lg"
+              }`}
+          >
+            {m.role === "user" ? "User: " : "AI: "}
+            {m.content}
+          </div>
+        ))}
+
+        {isLoading && (
+          <div className="flex justify-end pr-4">
+            <span className="animate-bounce">...</span>
+          </div>
+        )}
       </div>
     </div>
   );

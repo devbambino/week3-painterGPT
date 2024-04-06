@@ -11,9 +11,12 @@ export const runtime = 'edge';
 
 export async function POST(req: Request) {
     const { messages } = await req.json();
+    const assist_id = process.env.ASSISTANT_ID!;
+    let readableStream: ReadableStream<any> = new ReadableStream();
+
 
     // Ask OpenAI for a streaming chat completion given the prompt
-    const response = await openai.chat.completions.create({
+    /*const response = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         stream: true,
         messages: [
@@ -23,10 +26,26 @@ export async function POST(req: Request) {
             },
             ...messages,
         ],
+    });*/
+    console.log("messages: ", messages);
+    const run = await openai.beta.threads.createAndRun({
+        assistant_id: assist_id,
+        thread: {
+            messages: messages,
+        },
     });
+    let runStatus = await openai.beta.threads.runs.retrieve(run.thread_id, run.id);
 
-    // Convert the response into a friendly text-stream
-    const stream = OpenAIStream(response);
-    // Respond with the stream
-    return new StreamingTextResponse(stream);
+    while (runStatus.status !== 'completed') {
+      if (runStatus.status === 'failed' || runStatus.status === 'cancelled') {
+        throw new Error(`The run has ended in a non-successful status: ${runStatus.status}`);
+      }
+      runStatus = await openai.beta.threads.runs.retrieve(run.thread_id, run.id);
+    }
+    const msgs = await openai.beta.threads.messages.list(run.thread_id);
+    console.log("msgs: ", msgs.data.at(0)?.content[0].text.value);
+    const res = msgs.data.at(0)?.content[0].text.value;
+    return new Response(res, {
+        status: 200,
+    });
 }
